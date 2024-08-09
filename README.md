@@ -8,15 +8,15 @@ The final output consists of the predicted codas with a speaker id
 
 ## Inference
 
-If you are only interested in running the pipeline, check out inference_only/audio_file_to_annotations_and_book_of_whales.ipynb for a simple guide on how to get annotations from an audio file, and how to get a book of whales plot from an annotation files. Alternativly, check out inference_only/read_me.md for a guide on how to extract annotatons from an audio file or a folder of audio files using the command line.
+If you are only interested in running the pipeline, check out `inference_only/audio_file_to_annotations_and_book_of_whales.ipynb` for a simple guide on how to get annotations from an audio file, and how to get a book of whales plot from an annotation files. Alternativly, check out `inference_only/read_me.md` for a guide on how to extract annotatons from an audio file or a folder of audio files using the command line.
 
 ## Training
 
-If you wish to train the pipeline, see training_and_evaluation/training_on_your_own_dataset.ipynb for a guide on how to format your dataset and which files to run in order to train the full pipeline.
+If you wish to train the pipeline, see `training_and_evaluation/training_on_your_own_dataset.ipynb` for a guide on how to format your dataset and which files to run in order to train the full pipeline.
 
 ## Evaluation
 
-In order to evaluate the pipeline, see training_and_evaluation/evaluation.ipynb. Note that you in order to get results you must first have ran inference on the dataset by running training_and_evaluation/candidate_revision_inference.py
+In order to evaluate the pipeline, see `training_and_evaluation/evaluation.ipynb`. Note that you in order to get results you must first have ran inference on the dataset by running `training_and_evaluation/candidate_revision_inference.py`.
 
 ### Author
 Created by Martín Rodríguez Muñoz during his stay as a visiting student at MIT under the supervision of Pratyusha Sharma and Professor Antonio Torralba.
