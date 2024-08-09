@@ -8,7 +8,9 @@ The final output consists of the predicted codas with a speaker id
 
 ## Inference
 
-If you are only interested in running the pipeline, check out `inference_only/audio_file_to_annotations_and_book_of_whales.ipynb` for a simple guide on how to get annotations from an audio file, and how to get a book of whales plot from an annotation files. Alternativly, check out `inference_only/read_me.md` for a guide on how to extract annotatons from an audio file or a folder of audio files using the command line.
+If you are only interested in running the pipeline, check out `inference_only/audio_file_to_annotations_and_book_of_whales.ipynb` for a simple guide on how to get annotations from an audio file, and how to get a book of whales plot from an annotation files. Alternatively, check out `inference_only/read_me.md` for a guide on how to extract annotatons from an audio file or a folder of audio files using the command line.
+
+In order to run the pipeline you will need to download the checkpoints separately from the releases section of this github.
 
 ## Training
 
