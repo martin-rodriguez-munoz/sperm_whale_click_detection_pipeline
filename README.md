@@ -30,5 +30,14 @@ If you wish to train the pipeline, see `training_and_evaluation/training_on_your
 
 In order to evaluate the pipeline, see `training_and_evaluation/evaluation.ipynb`. Note that you in order to get results you must first have ran inference on the dataset by running `training_and_evaluation/candidate_revision_inference.py`.
 
+## Compute
+
+The model was trained on single V100 GPU of a DGX machine. 
+
+The most GPU memory used during training is 2861 MiB, which happens when training the click candidate revision model (the transformer in phase 2). 
+![image](https://github.com/user-attachments/assets/47a86ff3-f2aa-4738-a5a0-bc3dbe2bb8bb)
+The most GPU memory used during inference is 1651 MiB, which happens during phase 2.
+![image](https://github.com/user-attachments/assets/74625ec5-ec44-46cf-9063-970a0566b4cb)
+
 ### Author
 Created by Martín Rodríguez Muñoz during his stay as a visiting student at MIT under the supervision of Pratyusha Sharma and Professor Antonio Torralba.
