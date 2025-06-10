@@ -28,33 +28,34 @@ import librosa
 
 def phase_2(click_candidates_df,audio,output_file,
             path_to_phase_2_soundnet_checkpoint,path_to_phase_2_transformer_checkpoint,path_to_phase_2_linear_checkpoint,path_to_phase_2_coda_checkpoint,path_to_phase_2_whale_checkpoint
-            ,store_phase_2_output,print_p2_output,pred_th):
+            ,store_phase_2_output,pred_th,print_p2_output=False):
 
         print("Running phase 2")
         transformer_dataset = DatasetForTransformer(num_windows_to_send, max_context_time)
         transformer_dataset.load_file(click_candidates_df,audio)        
 
         dataloader = DataLoader(transformer_dataset,batch_size=batch_size,shuffle=False, num_workers=20)
+        
+        device = "cuda" if torch.cuda.is_available() else "cpu"
+        model_soundnet = SoundNet().to(device)
+        model_trans = ViT(unit_size=input_embedding_size, dim=1024, depth=6, heads=8, mlp_dim=2048, dim_head = 64, dropout = 0.1, emb_dropout = 0.1, max_len = num_windows_to_send+num_windows_in_context).to(device)
+        model_linear = nn.Linear(1024,2).to(device)
+        model_coda = nn.Linear(1024,2).to(device)
+        model_whale = nn.Linear(1024,2).to(device)
 
-        model_soundnet = SoundNet().cuda()
-        model_trans = ViT(unit_size=input_embedding_size, dim=1024, depth=6, heads=8, mlp_dim=2048, dim_head = 64, dropout = 0.1, emb_dropout = 0.1, max_len = num_windows_to_send+num_windows_in_context).cuda()
-        model_linear = nn.Linear(1024,2).cuda()
-        model_coda = nn.Linear(1024,2).cuda()
-        model_whale = nn.Linear(1024,2).cuda()
-
-        checkpoint_soundnet = torch.load(path_to_phase_2_soundnet_checkpoint)
+        checkpoint_soundnet = torch.load(path_to_phase_2_soundnet_checkpoint,map_location=device)
         model_soundnet.load_state_dict(checkpoint_soundnet["model_state_dict"])
 
-        checkpoint_transformer = torch.load(path_to_phase_2_transformer_checkpoint)
+        checkpoint_transformer = torch.load(path_to_phase_2_transformer_checkpoint,map_location=device)
         model_trans.load_state_dict(checkpoint_transformer["model_state_dict"])
 
-        checkpoint_linear = torch.load(path_to_phase_2_linear_checkpoint)
+        checkpoint_linear = torch.load(path_to_phase_2_linear_checkpoint,map_location=device)
         model_linear.load_state_dict(checkpoint_linear["model_state_dict"])
 
-        checkpoint_coda = torch.load(path_to_phase_2_coda_checkpoint)
+        checkpoint_coda = torch.load(path_to_phase_2_coda_checkpoint,map_location=device)
         model_coda.load_state_dict(checkpoint_coda["model_state_dict"])
 
-        checkpoint_whale = torch.load(path_to_phase_2_whale_checkpoint)
+        checkpoint_whale = torch.load(path_to_phase_2_whale_checkpoint,map_location=device)
         model_whale.load_state_dict(checkpoint_whale["model_state_dict"])
 
         model_soundnet.eval()
@@ -77,10 +78,10 @@ def phase_2(click_candidates_df,audio,output_file,
 
         for sample_batched in dataloader:
             with torch.no_grad():
-                transformer_audio = sample_batched[0].type(torch.cuda.FloatTensor)
-                transformer_position_mask = sample_batched[1].type(torch.cuda.BoolTensor)
-                transformer_time = sample_batched[2].type(torch.cuda.FloatTensor)
-                transformer_center_mask = sample_batched[3].type(torch.cuda.BoolTensor)
+                transformer_audio = sample_batched[0].type(torch.FloatTensor).to(device)
+                transformer_position_mask = sample_batched[1].type(torch.BoolTensor).to(device)
+                transformer_time = sample_batched[2].type(torch.FloatTensor).to(device)
+                transformer_center_mask = sample_batched[3].type(torch.BoolTensor).to(device)
 
                 not_center_mask = ~transformer_center_mask
 

@@ -24,7 +24,7 @@ sr = 22050
 def annotate(input_file,output_file,prediction_th,sending_th,
                         path_to_phase_1_soundnet_checkpoint,path_to_phase_1_mlp_checkpoint,
                         path_to_phase_2_soundnet_checkpoint,path_to_phase_2_transformer_checkpoint,path_to_phase_2_linear_checkpoint,path_to_phase_2_coda_checkpoint,path_to_phase_2_whale_checkpoint,
-                        store_phase_1_predictions,store_all_phase_1_confidences,store_phase_2_output,print_p1_output,print_p2_output):
+                        store_phase_1_predictions,store_all_phase_1_confidences,store_phase_2_output):
 
 
 
@@ -44,9 +44,9 @@ def annotate(input_file,output_file,prediction_th,sending_th,
     
     click_candidates = phase_1(full_audio,output_file,sending_th,
                         path_to_phase_1_soundnet_checkpoint,path_to_phase_1_mlp_checkpoint,
-                        store_phase_1_predictions,store_all_phase_1_confidences,print_p1_output)
+                        store_phase_1_predictions,store_all_phase_1_confidences)
 
-    click_info_json = phase_2(click_candidates,full_audio,output_file,path_to_phase_2_soundnet_checkpoint,path_to_phase_2_transformer_checkpoint,path_to_phase_2_linear_checkpoint,path_to_phase_2_coda_checkpoint,path_to_phase_2_whale_checkpoint,store_phase_2_output,print_p2_output,prediction_th)
+    click_info_json = phase_2(click_candidates,full_audio,output_file,path_to_phase_2_soundnet_checkpoint,path_to_phase_2_transformer_checkpoint,path_to_phase_2_linear_checkpoint,path_to_phase_2_coda_checkpoint,path_to_phase_2_whale_checkpoint,store_phase_2_output,prediction_th)
 
     final_results = phase_3(click_info_json,prediction_th,input_file)
     final_results.to_csv(output_file,index=False)

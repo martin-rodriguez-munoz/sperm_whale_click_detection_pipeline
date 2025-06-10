@@ -33,7 +33,7 @@ def supress_multiple_pred(data_df,sending_th):
 
 def phase_1(full_audio,output_file,sending_th,
                         path_to_phase_1_soundnet_checkpoint,path_to_phase_1_mlp_checkpoint,
-                        store_phase_1_predictions,store_all_phase_1_confidences,print_output):
+                        store_phase_1_predictions,store_all_phase_1_confidences,print_output=False):
 
     # Click detector settings
     sr = 22050
@@ -46,15 +46,17 @@ def phase_1(full_audio,output_file,sending_th,
 
     click_detector_dataset = LongFileDataset(full_audio, context_radius, center_radius)
     click_detector_dataloader = DataLoader(click_detector_dataset,batch_size=click_batch_size,shuffle=False, num_workers=20)
-
+    
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    print("device",device)
     print("Loading phase 1 models")
-    model_soundnet = SoundNet().cuda()
-    model_mlp = ManyLayerMlp(4096).cuda()
+    model_soundnet = SoundNet().to(device)
+    model_mlp = ManyLayerMlp(4096).to(device)
 
-    checkpoint_soundnet = torch.load(path_to_phase_1_soundnet_checkpoint)
+    checkpoint_soundnet = torch.load(path_to_phase_1_soundnet_checkpoint,map_location=device)
     model_soundnet.load_state_dict(checkpoint_soundnet["model_state_dict"])
 
-    checkpoint_mlp = torch.load(path_to_phase_1_mlp_checkpoint)
+    checkpoint_mlp = torch.load(path_to_phase_1_mlp_checkpoint,map_location=device)
     model_mlp.load_state_dict(checkpoint_mlp["model_state_dict"])
 
     model_soundnet.eval()
@@ -74,7 +76,8 @@ def phase_1(full_audio,output_file,sending_th,
     with torch.no_grad():
         context_window_start_of_batch = 0
         for i_batch, audio in enumerate(click_detector_dataloader):
-            audio = audio.type(torch.cuda.FloatTensor)
+            audio = audio.type(torch.FloatTensor)
+            audio.to(device)
             cur_batch_size = audio.shape[0]
 
             embeddings = model_soundnet(audio)
