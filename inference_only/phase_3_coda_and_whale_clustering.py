@@ -208,7 +208,7 @@ def phase_3(click_info_json,prediction_th,input_file_name):
 
     # Two codas will not be assigned same whale if there is not path of positive weights that connects them
     # Use this to seperate the problem into subcases before we even start 
-    G = nx.from_numpy_matrix(whale_weights < -0.00001)
+    G = nx.from_numpy_array(whale_weights < -0.00001)
     G = G.to_undirected()
     S = [G.subgraph(c).copy() for c in nx.connected_components(G)]
     all_predicted_times = np.array(all_predicted_times)
