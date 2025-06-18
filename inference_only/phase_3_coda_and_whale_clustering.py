@@ -22,7 +22,7 @@ def eigen_clustering(prob_matrix):
 
     # Two clicks will not be assigned same coda if there is not path of at least 0.5 probability that connects them
     # Use this to seperate the problem into subcases before we even start 
-    G = nx.from_numpy_matrix(prob_matrix > 0.5)
+    G = nx.from_numpy_array(prob_matrix > 0.5)
     G = G.to_undirected()
     S = [G.subgraph(c).copy() for c in nx.connected_components(G)]
     to_divide = []
